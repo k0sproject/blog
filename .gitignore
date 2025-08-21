@@ -1,0 +1,6 @@
+/public/
+/resources/_gen/
+/hugo_stats.json
+*.local
+.DS_Store
+
