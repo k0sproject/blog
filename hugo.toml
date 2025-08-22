@@ -1,3 +1,27 @@
-baseURL = 'https://example.org/'
-languageCode = 'en-us'
-title = 'My New Hugo Site'
+baseURL = "https://blog.k0sproject.io/"
+languageCode = "en"
+title = "The k0s project blog"
+theme = "PaperMod"
+enableRobotsTXT = true
+canonifyURLs = false
+relativeURLs = true
+
+[markup.highlight]
+noClasses = false
+
+[params]
+  defaultTheme = "auto"
+  showReadingTime = true
+  showPostNavLinks = true
+  showCodeCopyButtons = true
+  descriptions = true
+  author = "k0s team"
+
+[outputs]
+  home = ["HTML", "RSS"]
+
+[menu]
+  [[menu.main]]
+    name = "Posts"
+    url = "/posts/"
+    weight = 10
