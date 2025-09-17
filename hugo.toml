@@ -33,3 +33,7 @@ noClasses = false
     name = "Archive"
     url = "/archives/"
     weight = 30
+  [[menu.main]]
+    name = "Tags"
+    url = "/tags/"
+    weight = 40
