@@ -1,6 +1,6 @@
 baseURL: https://psychic-dollop-ywg1jrq.pages.github.io/
 languageCode: en
-title: The k0s project blog
+title: k0s - The Kubernetes Distribution
 theme: PaperMod
 enableRobotsTXT: true
 canonifyURLs: false
@@ -13,23 +13,34 @@ params:
   showReadingTime: true
   showPostNavLinks: true
   showCodeCopyButtons: true
+  showShareButtons: true
   descriptions: true
   author: k0s team
+  homeInfoParams:
+    Title: k0s - The Kubernetes Distribution
+    Content: The Official Blog of k0s Community
+  socialIcons:
+    - name: Website
+      url: https://k0sproject.io
+    - name: GitHub
+      url: https://github.com/k0sproject
+    - name: X
+      url: https://x.com/k0sproject
+    - name: Slack
+      url: https://kubernetes.slack.com/archives/C0809EA06QZ
+
 outputs:
   home:
     - HTML
     - RSS
 menu:
   main:
-    - name: Posts
-      url: /posts/
-      weight: 10
     - name: About
       url: /about/
-      weight: 20
+      weight: 10
     - name: Archive
       url: /archives/
-      weight: 30
+      weight: 20
     - name: Tags
       url: /tags/
-      weight: 40
+      weight: 30
