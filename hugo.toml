@@ -29,3 +29,7 @@ noClasses = false
     name = "About"
     url = "/about/"
     weight = 20
+  [[menu.main]]
+    name = "Archive"
+    url = "/archives/"
+    weight = 30
