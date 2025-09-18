@@ -1,10 +1,8 @@
-baseURL: https://psychic-dollop-ywg1jrq.pages.github.io/
+baseURL: https://blog.k0sproject.io/
 languageCode: en
 title: k0s - The Kubernetes Distribution
 theme: PaperMod
 enableRobotsTXT: true
-canonifyURLs: false
-relativeURLs: true
 markup:
   highlight:
     noClasses: false
