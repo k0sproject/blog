@@ -1,0 +1,21 @@
+<div class="social-icons" {{ with .align }}align="{{ . }}" {{- end }}>
+    {{- range site.Params.socialIcons }}
+    {{- $icon := trim .name " " | lower -}}
+    <a href="{{ trim .url " " | safeURL }}" target="_blank" rel="noopener noreferrer me"
+        title="{{ (.title | default .name) | title }}">
+        {{- if eq $icon "k0s" -}}
+        <span class="custom-icon custom-icon-social-k0sproject">
+            <span class="icon-light">{{- partial "svg/k0s-logo-light.svg" . -}}</span>
+            <span class="icon-dark">{{-  partial "svg/k0s-logo-dark.svg"  . -}}</span>
+        </span>
+        {{- else if eq $icon "k0smotron" -}}
+        <span class="custom-icon custom-icon-social-k0sproject">
+            <span class="icon-light">{{- partial "svg/k0smotron-logo-light.svg" . -}}</span>
+            <span class="icon-dark">{{-  partial "svg/k0smotron-logo-dark.svg"  . -}}</span>
+        </span>
+        {{- else -}}
+            {{- partial "svg.html" . -}}
+        {{- end -}}
+    </a>
+    {{- end }}
+</div>
