@@ -1,12 +1,12 @@
 baseURL: https://blog.k0sproject.io/
 languageCode: en
-title: k0s - The Kubernetes Distribution
+title: The Zero Friction Kubernetes Blog
 theme: PaperMod
 enableRobotsTXT: true
 markup:
   highlight:
     noClasses: false
-copyright:
+copyright: >-
   Copyright &copy; 2023 k0sproject a Series of LF Projects, LLC.
   For website terms of use, trademark policy and other project policies please see [Linux Foundation policies](https://lfprojects.org/policies/).
   - All rights reserved.
@@ -17,13 +17,15 @@ params:
   showCodeCopyButtons: true
   showShareButtons: true
   descriptions: true
-  author: k0s team
+  author: k0sproject authors
   homeInfoParams:
-    Title: k0s - The Kubernetes Distribution
-    Content: The Official Blog of k0s Community
+    Title: The Zero Friction Kubernetes Blog
+    Content: Official blog of the k0sproject community
   socialIcons:
-    - name: Website
+    - name: k0s
       url: https://k0sproject.io
+    - name: k0smotron
+      url: https://k0smotron.io
     - name: GitHub
       url: https://github.com/k0sproject
     - name: X

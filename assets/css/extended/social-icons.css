@@ -1,0 +1,20 @@
+.custom-icon-social-k0sproject {
+  display: inline-flex;
+  align-items: center;
+}
+
+.custom-icon-social-k0sproject > span {
+  display: inline-flex;
+}
+
+.custom-icon-social-k0sproject .icon-dark {
+  display: none;
+}
+
+body.dark .custom-icon-social-k0sproject .icon-light {
+  display: none;
+}
+
+body.dark .custom-icon-social-k0sproject .icon-dark {
+  display: inline-flex;
+}
