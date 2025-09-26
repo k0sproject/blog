@@ -3,7 +3,6 @@ title: "K0smotron 1.7.0 Release: Federated Hosted Control Planes"
 date: 2025-09-26T09:00:00Z
 author: "Adrian Pedriza"
 tags: ["k0smotron", "kubernetes", "cluster API", "k0s", "containers"]
-draft: true
 cover:
   image: "1.png"
 ---
