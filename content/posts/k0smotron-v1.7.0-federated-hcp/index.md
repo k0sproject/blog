@@ -1,8 +1,10 @@
 ---
-title: "K0smotron 1.7.0 Release: Federated Hosted Control Planes"
+title: "K0smotron v1.7.0 Release: Federated Hosted Control Planes"
 date: 2025-09-26T09:00:00Z
 author: "Adrian Pedriza"
 tags: ["k0smotron", "kubernetes", "cluster API", "k0s", "containers"]
+aliases:
+    - "/k0smotron-v1.7.0-federated-hcp"
 cover:
   image: "1.png"
 ---
@@ -15,7 +17,7 @@ At the same time, we’ve been refining the overall developer and operator exper
 
 Finally, we’re excited to announce support for **Federated Hosted Control Planes**, which adds an entirely new layer of adaptability for multi-cluster scenarios. We’ll take a closer look at this feature later in the post.
 
-## What’s new in K0smotron 1.7.0
+## What’s new in K0smotron v1.7.0
 
 This release introduces Federated Hosted Control Planes, a major new capability, along with a set of improvements in provisioning, reliability, and documentation.
 
@@ -80,6 +82,6 @@ In this example, the cluster spec points to a `kubeconfig` stored in a Secret. T
 
 ## Wrapping up
 
-K0smotron 1.7.0 is a release focused on extending flexibility and strengthening the foundations of the project. With Federated Hosted Control Planes, smarter provisioning, and tighter integration with Cluster API, we’re making it easier to run Kubernetes clusters in ways that adapt to real world needs, from multi-cloud setups to edge deployments and everything in between.
+K0smotron v1.7.0 is a release focused on extending flexibility and strengthening the foundations of the project. With Federated Hosted Control Planes, smarter provisioning, and tighter integration with Cluster API, we’re making it easier to run Kubernetes clusters in ways that adapt to real world needs, from multi-cloud setups to edge deployments and everything in between.
 
 We’re excited about this release, and even more about what’s coming next. As always, we’d love feedback from the community, so give the new features a try and let us know what you think! 🚀
