@@ -7,11 +7,11 @@ This repo powers the k0s team blog using [Hugo](https://gohugo.io/). If you can 
 1. Create a new post (Hugo “leaf bundle” with its own folder):
 
 ```sh
-hugo new content/blog/my-post-title/index.md
+hugo new content/posts/my-post-title/index.md
 ```
 
 2. Open the generated file and fill in front matter (see below).
-3. Add any images/files into the **same folder** as the post (e.g., `content/blog/my-post-title/diagram.png`).
+3. Add any images/files into the **same folder** as the post (e.g., `content/posts/my-post-title/diagram.png`).
 4. Preview locally:
 
 ```sh
