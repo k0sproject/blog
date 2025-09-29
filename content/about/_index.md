@@ -6,12 +6,17 @@ title = 'About'
 
 ## About this blog
 
-This is the official blog for the [k0s project](https//k0sproject.io).
+This is the official blog for the [k0s project].
 
 Here we will share news, technical deep-dives, and practical guides around:
 
-- [k0s](https://k0sproject.io/) - the simple, solid and certified [Kubernetes](https://kubernetes.io/) distribution
-- [k0smotron](https://k0smotron.io/) - the Kubernetes control plane manager
+- [k0s] - the simple, solid and certified [Kubernetes] distribution
+- [k0smotron] - the Kubernetes control plane manager
 
-Our goal is to make Kubernetes more approachable while showing what makes k0s and k0smotron unique.
-Thanks for stopping by!
+Our goal is to make Kubernetes more approachable while showing what makes k0s
+and k0smotron unique. Thanks for stopping by!
+
+[k0s project]: https://k0sproject.io/
+[k0s]: https://k0sproject.io/
+[Kubernetes]: https://kubernetes.io/
+[k0smotron]: https://k0smotron.io/
