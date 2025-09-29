@@ -6,7 +6,7 @@ title = 'About'
 
 ## About this blog
 
-This is the official blog for the [k0s project].
+This is the official blog for the [k0sproject].
 
 Here we will share news, technical deep-dives, and practical guides around:
 
@@ -16,7 +16,7 @@ Here we will share news, technical deep-dives, and practical guides around:
 Our goal is to make Kubernetes more approachable while showing what makes k0s
 and k0smotron unique. Thanks for stopping by!
 
-[k0s project]: https://k0sproject.io/
+[k0sproject]: https://github.com/k0sproject/
 [k0s]: https://k0sproject.io/
 [Kubernetes]: https://kubernetes.io/
 [k0smotron]: https://k0smotron.io/
