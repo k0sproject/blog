@@ -68,12 +68,12 @@ Deploying control planes as pods in a cluster other than the management cluster 
 apiVersion: k0smotron.io/v1beta1
 kind: Cluster
 metadata:
-    name: my-k0smotron
+  name: my-k0smotron
 spec:
-    kubeconfigRef:
-        name: my-external-cluster-kubeconfig
-        namespace: some-namespace
-        key: secret-key-for-kubeconfig
+  kubeconfigRef:
+    name: my-external-cluster-kubeconfig
+    namespace: some-namespace
+    key: secret-key-for-kubeconfig
 ```
 
 In this example, the cluster spec points to a `kubeconfig` stored in a Secret. The k0smotron controller uses that configuration to connect to the target cluster and deploy the control plane pods there. 
