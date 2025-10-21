@@ -1,0 +1,6 @@
+/*
+This CSS extends some defaults so we can make the content bit wider on larger screens
+*/
+
+.main { min-width: 60%; }
+
