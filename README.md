@@ -65,7 +65,7 @@ Additional notes:
   Example tree:
 
   ```text
-  content/blog/my-post-title/
+  content/posts/my-post-title/
   ├─ index.md
   ├─ cover.png
   └─ diagram.png

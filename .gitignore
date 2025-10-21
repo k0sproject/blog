@@ -3,4 +3,6 @@
 /hugo_stats.json
 *.local
 .DS_Store
+.hugo_build.lock
+
 
