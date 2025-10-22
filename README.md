@@ -110,6 +110,13 @@ such as CSS are served correctly; loading `public/index.html` directly from the
 filesystem will usually miss theme assets because the site is built with the
 production `baseURL`.
 
+The server binds only to localhost by default. To allow testing with e.g. your mobile
+device, use:
+
+```sh
+hugo server --bind 0.0.0.0 --baseURL http://YOUR_COMPUTER_IP:1313/
+```
+
 ## Pull request checklist
 
 * [ ] `title`, `date`, `author`, `summary` set
