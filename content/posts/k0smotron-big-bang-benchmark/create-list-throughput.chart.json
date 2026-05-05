@@ -7,9 +7,7 @@
       { "label": "kine-postgres", "data": [327, 582, 633, 651] },
       { "label": "kine-mysql", "data": [1151, 1853, 2015, 2005] },
       { "label": "kine-sqlite", "data": [11, 12, 13, 14] },
-      { "label": "kine-nats-embedded", "data": [376, 165, 544, 927] },
-      { "label": "kine-t4", "data": [1650, 1092, 1049, 2959] },
-      { "label": "t4-standalone", "data": [1649, 1103, 1197, 2842] }
+      { "label": "kine-nats-embedded", "data": [376, 165, 544, 927] }
     ]
   },
   "options": {
