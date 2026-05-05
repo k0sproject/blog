@@ -1,0 +1,38 @@
+{
+  "type": "line",
+  "data": {
+    "labels": ["c50", "c200", "c500", "c1000"],
+    "datasets": [
+      { "label": "etcd", "data": [1651, 1109, 1258, 2881] },
+      { "label": "kine-postgres", "data": [327, 582, 633, 651] },
+      { "label": "kine-mysql", "data": [1151, 1853, 2015, 2005] },
+      { "label": "kine-sqlite", "data": [11, 12, 13, 14] },
+      { "label": "kine-nats-embedded", "data": [376, 165, 544, 927] },
+      { "label": "kine-t4", "data": [1650, 1092, 1049, 2959] },
+      { "label": "t4-standalone", "data": [1649, 1103, 1197, 2842] }
+    ]
+  },
+  "options": {
+    "plugins": {
+      "title": {
+        "display": true,
+        "text": "create-list: write throughput vs concurrency"
+      }
+    },
+    "scales": {
+      "x": {
+        "title": {
+          "display": true,
+          "text": "concurrency (clients)"
+        }
+      },
+      "y": {
+        "type": "linear",
+        "title": {
+          "display": true,
+          "text": "write ops/s"
+        }
+      }
+    }
+  }
+}

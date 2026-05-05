@@ -1,0 +1,8 @@
+{{- if and (eq .Kind "page") (.Page.Store.Get "hasCharts") }}
+  {{- $chartInit := resources.Get "js/chart-init.js" | resources.Minify -}}
+  {{- if not site.Params.assets.disableFingerprinting -}}
+    {{- $chartInit = $chartInit | fingerprint -}}
+  {{- end -}}
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script defer src="{{ $chartInit.RelPermalink }}"{{ with $chartInit.Data.Integrity }} integrity="{{ . }}" crossorigin="anonymous"{{ end }}></script>
+{{- end }}

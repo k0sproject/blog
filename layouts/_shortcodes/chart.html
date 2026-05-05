@@ -1,0 +1,32 @@
+{{- $id := .Get "id" | default (printf "chart-%s-%d" (.Page.File.UniqueID | default "page") .Ordinal) -}}
+{{- $height := .Get "height" | default "360px" -}}
+{{- $caption := .Get "caption" -}}
+{{- $ariaLabel := .Get "ariaLabel" | default ($caption | default "Chart") -}}
+{{- $source := .Get "src" -}}
+{{- $config := dict -}}
+
+{{- if $source -}}
+  {{- with .Page.Resources.GetMatch $source -}}
+    {{- $config = .Content | transform.Unmarshal -}}
+  {{- else -}}
+    {{- errorf "chart shortcode could not find %q in %s" $source $.Page.File.Path -}}
+  {{- end -}}
+{{- else -}}
+  {{- $inner := .Inner | strings.TrimSpace -}}
+  {{- if not $inner -}}
+    {{- errorf "chart shortcode requires either src or inline JSON in %s" .Page.File.Path -}}
+  {{- end -}}
+  {{- $config = $inner | transform.Unmarshal -}}
+{{- end -}}
+
+{{- .Page.Store.Set "hasCharts" true -}}
+
+<figure class="chart-card">
+  <div class="chart-card__canvas" style="--chart-height: {{ $height }};">
+    <canvas id="{{ $id }}" aria-label="{{ $ariaLabel }}" role="img"></canvas>
+  </div>
+  {{- with $caption }}
+  <figcaption>{{ . | markdownify }}</figcaption>
+  {{- end }}
+</figure>
+<script type="application/json" data-chart-config="{{ $id }}">{{ $config | jsonify | safeJS }}</script>
