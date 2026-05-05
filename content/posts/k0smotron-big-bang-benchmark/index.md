@@ -25,7 +25,7 @@ Our benchmark sets out to answer three concrete questions:
    realistic Kubernetes API load?
 3. **k0smotron overhead.** Is the operator itself a bottleneck, or do the HCP pods and their storage dominate?
 
-TLDR:
+{{< callout type="tldr" title="TL;DR" >}}
 
 - The k0smotron operator is small. At 100 HCPs it stays below half a core and under 100 MiB. The cost lives in the HCP
   pods and their storage, not in the operator.
@@ -33,27 +33,46 @@ TLDR:
   healthy when objects are changing fast.
 - etcd remains the safe baseline: zero write errors and full watch delivery across the whole concurrency sweep.
 - SQLite is fine for tiny or dependency-free setups but collapses under concurrent writes (88.7% write error rate at
-  c1000).
-- Embedded NATS accepts writes, but does not feed watches reliably once churn picks up. p99 watch lag sits near 60
-  seconds.
+  concurrency=1000).
+- Embedded NATS accepts writes, but does not feed watches reliably once churn picks up. 99th percentile watch lag
+  sits near 60 seconds.
 - PostgreSQL and MySQL handle high-concurrency create/list cleanly once connection limits are raised. Watch-churn still
   surfaces tuning and retry behavior.
-
-T4, an experimental backend with results in the etcd performance band, gets its own section toward the end.
+  {{< /callout >}}
 
 The rest of this post walks through the numbers, what they mean for sizing, and where the test stops short.
+
+{{< details title="Reading the numbers (jargon glossary)" >}}
+A few terms repeat throughout the post:
+
+- **HCP** — hosted control plane. The pod (or set of pods) that runs the Kubernetes API server and supporting
+  components for one workload cluster. The whole benchmark is about how many HCPs one management cluster can host.
+- **c50, c200, c500, c1000** — number of concurrent clients hammering the API server during a test. c1000 means 1000
+  clients in flight at once.
+- **ops/s** — operations per second. Writes or reads, depending on the column header.
+- **p50, p99** — median (50th percentile) and 99th-percentile latency. p50 is the typical case; p99 is what the slowest
+  1% of requests see and is usually a better signal for "is this still healthy under load."
+- **watch** — a long-lived Kubernetes API request that streams object change events. Controllers depend on watches to
+  notice work.
+- **watch lag** — time between an object changing and the watcher receiving the event. Low is good. p99 watch lag means
+  the slowest 1% of events.
+- **watch event rate** — how many events the storage delivers per second. If this drops below the rate the workload
+  generates, watchers fall behind real time.
+- **`create-list` / `watch-churn`** — the two API workload profiles we ran. `create-list` is a write-and-list
+  throughput test. `watch-churn` keeps watches open while objects change rapidly, which is closer to what real
+  controllers do.
+  {{< /details >}}
 
 ## What we built and what we measured
 
 The benchmark ran on AWS in a single availability zone to avoid cross-AZ latency noise.
 
-| role                             | shape                                  |
-|----------------------------------|----------------------------------------|
-| management control-plane node    | `c5.4xlarge`, 16 vCPU, 32 GiB          |
-| management workers               | 3 x `m5.4xlarge`, 16 vCPU, 64 GiB each |
-| PostgreSQL node                  | `r6i.xlarge`, io2 data disk            |
-| MySQL node                       | `r6i.xlarge`, io2 data disk            |
-| MinIO node for T4 object storage | `r6i.large`, io2 data disk             |
+| role                          | shape                                  |
+|-------------------------------|----------------------------------------|
+| management control-plane node | `c5.4xlarge`, 16 vCPU, 32 GiB          |
+| management workers            | 3 x `m5.4xlarge`, 16 vCPU, 64 GiB each |
+| PostgreSQL node               | `r6i.xlarge`, io2 data disk            |
+| MySQL node                    | `r6i.xlarge`, io2 data disk            |
 
 The database setup is intentionally conservative. PostgreSQL and MySQL were not heavily tuned. For benchmark runs we
 raised their connection limits so the test could reach higher HCP counts and client concurrency: both at
@@ -63,19 +82,20 @@ production database".
 
 The storage variants:
 
-| storage              | shape                                    |
-|----------------------|------------------------------------------|
-| `etcd`               | per-HCP etcd StatefulSet                 |
-| `kine-postgres`      | k0s+kine using external PostgreSQL       |
-| `kine-mysql`         | k0s+kine using external MySQL            |
-| `kine-sqlite`        | k0s+kine using SQLite inside the HCP pod |
-| `kine-nats-embedded` | k0s with embedded NATS storage           |
+| storage              | shape                                      |
+|----------------------|--------------------------------------------|
+| `etcd`               | k0smotron managed per-HCP etcd StatefulSet |
+| `kine-postgres`      | k0s+kine using external PostgreSQL         |
+| `kine-mysql`         | k0s+kine using external MySQL              |
+| `kine-sqlite`        | k0s+kine using SQLite inside the HCP pod   |
+| `kine-nats-embedded` | k0s with embedded NATS storage             |
 
 A hosted control plane (HCP) is the pod, or set of pods, running the Kubernetes API server and supporting components for
 one workload cluster. Where storage lives depends on the backend:
 
 - with `etcd`, storage runs as a separate per-HCP StatefulSet
-- with PostgreSQL or MySQL, storage is a database pod on a separate node
+- with PostgreSQL or MySQL, storage is a single database pod on a it's own node. All HCPs share the same database instance, 
+  so the storage cost is amortized across them.
 - with SQLite or embedded NATS, storage runs inside the HCP pod
 
 For sizing, we report two columns. **HCP** is CPU and memory used by hosted control-plane pods. **Total** is HCP plus
@@ -242,21 +262,21 @@ resource limits affect latency and throughput without immediately turning into a
 
 The presets:
 
-| preset    |         CPU limit |      memory limit |
-|-----------|------------------:|------------------:|
-| tiny      |              250m |             512Mi |
-| small     |              500m |             768Mi |
-| medium    |             1000m |               1Gi |
-| large     |             2000m |               2Gi |
-| unlimited | no explicit limit | no explicit limit |
+| preset | CPU limit | memory limit |
+|--------|----------:|-------------:|
+| tiny   |      250m |        512Mi |
+| small  |      500m |        768Mi |
+| medium |     1000m |          1Gi |
+| large  |     2000m |          2Gi |
 
 A few representative write-throughput results:
 
-| storage         |     tiny |     small |    medium |     large |
-|-----------------|---------:|----------:|----------:|----------:|
-| `etcd`          | 98 ops/s | 198 ops/s | 379 ops/s | 457 ops/s |
-| `kine-postgres` |  7 ops/s |  17 ops/s |  55 ops/s |  89 ops/s |
-| `kine-mysql`    | 36 ops/s |  82 ops/s | 169 ops/s | 329 ops/s |
+| storage              |     tiny |     small |    medium |     large |
+|----------------------|---------:|----------:|----------:|----------:|
+| `etcd`               | 98 ops/s | 198 ops/s | 379 ops/s | 457 ops/s |
+| `kine-postgres`      |  7 ops/s |  17 ops/s |  55 ops/s |  89 ops/s |
+| `kine-mysql`         | 36 ops/s |  82 ops/s | 169 ops/s | 329 ops/s |
+| `kine-nats-embedded` |      --- |  19 ops/s |  34 ops/s |  72 ops/s |
 
 The pattern is what an operator would expect. Tight CPU limits cap throughput quickly. Adding CPU helps until the
 bottleneck moves elsewhere. The practical lesson: backend comparisons only make sense when HCP size is part of the test
@@ -269,6 +289,15 @@ point, not a fair default for performance comparisons.
 
 The HA sweep runs HCPs with three replicas instead of one. Resource model changes substantially. Watch-churn ranking
 does not.
+
+HA setups mean:
+
+| storage              | shape                                        |
+|----------------------|----------------------------------------------|
+| `etcd`               | 3 HCP pods + 3 etcd pods (k0smotron managed) |
+| `kine-postgres`      | 3 HCP pods + single external PostgreSQL      |
+| `kine-mysql`         | 3 HCP pods + single external MySQL           |
+| `kine-nats-embedded` | 3 HCP pods with embedded NATS cluster        |
 
 At c1000:
 
@@ -314,7 +343,7 @@ PostgreSQL and MySQL look promising on provisioning and complete the high-concur
 write errors. Their watch-churn behavior is more sensitive to database configuration and retry behavior. Only connection
 count was tuned here; deeper engine tuning is out of scope.
 
-## A bit of experiment
+## A bit of an experiment: T4
 
 [T4](https://t4db.github.io/t4/) is a key-value database built on object storage. It offers an etcd-compatible API, so
 we
@@ -352,7 +381,7 @@ Both T4 modes match etcd on the metrics that decide whether a backend feeds cont
 Zero write errors, full watch delivery, lower p99 watch lag than etcd at c1000. The shape of the curve across the
 concurrency sweep is also close to etcd:
 
-{{< chart src="t4-watch-churn-lag.chart.json" caption="watch-churn p99 lag: T4 vs etcd" ariaLabel="watch-churn p99 watch lag for T4 vs etcd" />}}
+{{< chart src="t4-watch-churn-lag.chart.json" ariaLabel="watch-churn p99 watch lag for T4 vs etcd" />}}
 
 ### Caveats before recommending T4
 
