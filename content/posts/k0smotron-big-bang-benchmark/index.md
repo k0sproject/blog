@@ -329,6 +329,36 @@ That changes the question. When sizing a management cluster, the right thing to 
 k0smotron operator be?" It is how many HCP pods and storage pods the cluster has to run, and how much headroom you want
 for bursts when many control planes start or recover at the same time.
 
+## Sizing a management cluster: rough per-HCP numbers
+
+What does this look like if you want to plan for, say, 100 HCPs serving real-life Kubernetes traffic? The honest answer
+is "it depends on what your workloads do" — but the 100-HCP scale rows give a defensible upper bound.
+
+Dividing the 100-HCP totals by 100 gives a per-HCP burst budget:
+
+| backend              | per HCP CPU | per HCP memory | notes                       |
+|----------------------|------------:|---------------:|-----------------------------|
+| `etcd`               |   ~0.4 core |       ~210 MiB |                             |
+| `kine-postgres`      |   ~1.0 core |       ~560 MiB | external PostgreSQL counted |
+| `kine-mysql`         |   ~1.1 core |       ~420 MiB | external MySQL counted      |
+| `kine-sqlite`        |     ~1 core |       ~410 MiB | not suitable for high load  |
+| `kine-nats-embedded` |     ~1 core |       ~420 MiB | high watch lag in our tests |
+
+A few things to keep in mind when reading those numbers:
+
+- **These are sampled peaks during a heavy benchmark, not steady-state.** A real management cluster running mostly idle
+  HCPs will see less. Use these numbers as a ceiling for capacity planning, not as a steady-state quote.
+- **Headroom matters more than averages.** Cold starts, restarts, and recovery storms can briefly multiply usage. Size
+  for the case where ~10% of HCPs are starting or reconciling at once.
+- **Add the operator and storage placement costs separately.** k0smotron's operator stays under half a core and ~100
+  MiB even at 100 HCPs, so it's a rounding error. For etcd, the per-HCP StatefulSet cost is already in the per-HCP
+  number above. For SQL backends, the database server CPU and disk are tiny in this run because connection-tuned
+  defaults are doing little work; expect that to grow with deeper tuning or larger workloads.
+
+
+That is a starting point, not a deployment plan. Run a 10-HCP slice of your actual workload before committing to a
+shape — controllers in your app domain may push load differently from the synthetic profiles here.
+
 ## What we'd say today
 
 For a default recommendation, etcd remains the safe baseline. It is predictable, well understood, and handles both
@@ -346,8 +376,7 @@ count was tuned here; deeper engine tuning is out of scope.
 ## A bit of an experiment: T4
 
 [T4](https://t4db.github.io/t4/) is a key-value database built on object storage. It offers an etcd-compatible API, so
-we
-tested it because the architecture suggests it could fit hosted control planes well.
+we tested it because the architecture suggests it could fit hosted control planes well.
 
 We ran T4 in two modes:
 
