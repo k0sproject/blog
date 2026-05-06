@@ -1,0 +1,53 @@
+.details-callout {
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--secondary);
+  background: var(--code-bg);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  margin: 1.5rem 0;
+}
+
+.details-callout > summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--secondary);
+  list-style: none;
+  padding: 0.25rem 0;
+  user-select: none;
+}
+
+.details-callout > summary::-webkit-details-marker {
+  display: none;
+}
+
+.details-callout > summary::before {
+  content: "▶";
+  display: inline-block;
+  margin-right: 0.5rem;
+  transition: transform 0.15s ease;
+  font-size: 0.7em;
+}
+
+.details-callout[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.details-body {
+  padding-top: 0.5rem;
+}
+
+.details-body > :first-child { margin-top: 0; }
+.details-body > :last-child { margin-bottom: 0; }
+
+.details-body ul,
+.details-body ol {
+  margin-left: 1.25rem;
+  padding-left: 0;
+}
+
+.details-body li {
+  margin: 0.25rem 0;
+}

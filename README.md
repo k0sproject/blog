@@ -80,8 +80,16 @@ Additional notes:
 * Optional Hugo figure shortcode:
 
   ```md
-  {{< figure src="diagram.png" caption="Control plane layout" >}}
+   {{< figure src="diagram.png" caption="Control plane layout" >}}
+   ```
+
+* Charts can live beside the post as Chart.js JSON configs:
+
+  ```md
+  {{< chart src="throughput.chart.json" caption="Write throughput vs concurrency" />}}
   ```
+
+  The JSON file should be a valid [Chart.js config object](https://www.chartjs.org/docs/latest/configuration/) for a single chart.
 
 * Aim for small files (<1 MB). Add meaningful alt text.
 

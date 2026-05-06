@@ -1,0 +1,36 @@
+{
+  "type": "line",
+  "data": {
+    "labels": ["c50", "c200", "c500", "c1000"],
+    "datasets": [
+      { "label": "etcd", "data": [0.081, 2.7, 3.3, 7.8] },
+      { "label": "kine-postgres", "data": [0.323, 1.8, 4.7, 9.1] },
+      { "label": "kine-mysql", "data": [0.772, 0.523, 1.7, 4.4] },
+      { "label": "kine-sqlite", "data": [13.4, 26.5, 27.5, 27.9] },
+      { "label": "kine-nats-embedded", "data": [39.4, 22.6, 43.8, 51.5] }
+    ]
+  },
+  "options": {
+    "plugins": {
+      "title": {
+        "display": true,
+        "text": "watch-churn: p99 watch lag vs concurrency"
+      }
+    },
+    "scales": {
+      "x": {
+        "title": {
+          "display": true,
+          "text": "concurrency (clients)"
+        }
+      },
+      "y": {
+        "type": "linear",
+        "title": {
+          "display": true,
+          "text": "p99 lag in seconds"
+        }
+      }
+    }
+  }
+}

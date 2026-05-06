@@ -1,0 +1,8 @@
+{{- $title := .Get "title" | default "Details" -}}
+{{- $open := eq (.Get "open") "true" -}}
+<details class="details-callout"{{ if $open }} open{{ end }}>
+  <summary>{{ $title }}</summary>
+  <div class="details-body">
+    {{ .Inner | .Page.RenderString }}
+  </div>
+</details>

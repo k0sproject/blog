@@ -1,0 +1,33 @@
+.chart-card {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--entry);
+}
+
+.chart-card__canvas {
+  position: relative;
+  height: var(--chart-height, 360px);
+}
+
+.chart-card canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart-card figcaption {
+  margin-top: 0.85rem;
+  color: var(--secondary);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .chart-card {
+    padding: 0.85rem;
+  }
+
+  .chart-card__canvas {
+    height: min(var(--chart-height, 360px), 300px);
+  }
+}
