@@ -74,11 +74,10 @@ The benchmark ran on AWS in a single availability zone to avoid cross-AZ latency
 | PostgreSQL node               | `r6i.xlarge`, io2 data disk            |
 | MySQL node                    | `r6i.xlarge`, io2 data disk            |
 
-The database setup is intentionally conservative. PostgreSQL and MySQL were not heavily tuned. For benchmark runs we
+The database setup is intentionally conservative. PostgreSQL and MySQL were not tuned. For benchmark runs we only
 raised their connection limits so the test could reach higher HCP counts and client concurrency: both at
-`max_connections=2000`. We did not tune shared buffers, InnoDB buffer pool size, IO capacity, checkpoint behavior, or
-query settings. The SQL numbers below are closer to "mostly default DB with enough connections" than to "expertly tuned
-production database".
+`max_connections=2000`. We did not use PgBouncer/ProxySQL/etc and did not tune shared buffers, InnoDB buffer pool size, IO capacity, checkpoint behavior, or
+query settings. The SQL numbers below are closer to default DB than to expertly tuned production database.
 
 The storage variants:
 
@@ -276,7 +275,11 @@ A few representative write-throughput results:
 | `etcd`               | 98 ops/s | 198 ops/s | 379 ops/s | 457 ops/s |
 | `kine-postgres`      |  7 ops/s |  17 ops/s |  55 ops/s |  89 ops/s |
 | `kine-mysql`         | 36 ops/s |  82 ops/s | 169 ops/s | 329 ops/s |
+| `kine-sqlite`        | 34 ops/s |  80 ops/s | 200 ops/s | 522 ops/s |
 | `kine-nats-embedded` |      --- |  19 ops/s |  34 ops/s |  72 ops/s |
+
+Note: at this concurrency (10 clients), SQLite looks competitive. The high-concurrency `create-list` and `watch-churn`
+results above are where SQLite collapses. Reading these size results without that context would be misleading.
 
 The pattern is what an operator would expect. Tight CPU limits cap throughput quickly. Adding CPU helps until the
 bottleneck moves elsewhere. The practical lesson: backend comparisons only make sense when HCP size is part of the test
